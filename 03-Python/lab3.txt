@@ -1,0 +1,20 @@
+ipython phyton interactivo
+jupyter plataforma para entregar demos en phyton
+ipython
+ipython3
+jupyter notebook  //para abrir desde el explorador
+
+para evitar problemas de pantalla en el servidor
+
+ssh X user@... 
+
+el comando ! permite ejecutar comandos en consola desde matlab
+en python el comando es os.system(input)
+
+
+revisar modulo numpy para manejo de matrices
+matplotlib--recomendado
+pill
+opencv... muestra en bgr, hay que hacer modificaciones para imagenes rgb
+no cerrar imagenes con la x!... cerrar presionando cualquier tecla
+

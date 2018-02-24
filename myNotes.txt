@@ -1,0 +1,16 @@
+1. unzip the images in a unique folder> lab1Images---ok
+2. install imagemagick---ok
+3. create the demo script> myFindColorImages.sh---ok
+4. make executable---ok
+5. run the script---ok
+
+1. hacer fork sobre el github de Felipe. Se crea en mi github
+2. clonar el github de Felipe con nombre+original (ver https://help.github.com/articles/cloning-a-repository/)
+3. clonar el IBIO4680 de mi github con nombre+mio
+4. cada vez que se libere un nuevo lab, repetir paso 2 y luego copiar los archivos nuevos a nombre+mio
+5. Hacer un push para subir las actualizaciones de nombre+mio en el repositorio web
+		git push origin master
+
+
+gimp editor de imagenes 
+hacer la resta de las dos imagenes con opencv cv2.substract

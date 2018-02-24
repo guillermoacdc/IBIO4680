@@ -1,0 +1,40 @@
+Enviar email solicitando usuario y contraseña para entrar
+
+
+trabajo en línea con máquinas virtuales, en linux
+propósito 
+usar comandos básicos de Linux
+
+
+
+git hub
+archivo 
+
+ibio 4680
+
+https://github.com/diitaz93/Vision 	
+https://github.com/affromero/IBIO4680
+
+instalamos https://mobaxterm.mobatek.net/download-home-edition.html
+
+user: vision
+password: ibio4680
+3 maquinas virtuales
+22 estudiantes
+ssh vision@157.253.63.7 \\para conectarse con la maquina virtual
+las ip de las otras máquinas
+.8
+.53
+
+comando scp para copiar datos entre máquina virtual y pc real
+scp <from> <to>
+scp -r vision@157.253.63.7:~/sipi_images .
+
+
+para descomprimir usar el comando tar
+man tar
+
+tar -x -C /aerialsFolder aerials.tar.gz 
+tar zxf -C /some/dir foo.tar.gz
+
+para crear carpeta usar comando mkdir

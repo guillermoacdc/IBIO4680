@@ -1,0 +1,17 @@
+Carpeta con .git está siendo sincronizada en git hub
+git add demo.txt  //para agregar a github
+git commit -m  "crear archivo"   //registra texto de creacion del archvio
+git diff    //para ver los cambios respecto a la ultima vez
+git checkout  //para devolverte a la primera versión
+
+
+para eliminar un archivo deñ got
+git rm --cached
+
+
+1. hacer fork sobre el github de Felipe
+2. clonar el github de Felipe con nombre+original
+3. clonar el github de Felipe con nombre+mia
+4. copiar los nuevos archvios a carpeta mia
+Ver los slides en 
+https://github.com/affromero/IBIO4680/blob/master/02-Git/workflow_lab.pdf
