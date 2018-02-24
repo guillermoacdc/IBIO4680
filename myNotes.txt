@@ -8,7 +8,8 @@
 2. clonar el github de Felipe con nombre+original (ver https://help.github.com/articles/cloning-a-repository/)
 3. clonar el IBIO4680 de mi github con nombre+mio
 4. cada vez que se libere un nuevo lab, repetir paso 2 y luego copiar los archivos nuevos a nombre+mio
-5. Hacer un push para subir las actualizaciones de nombre+mio en el repositorio web
+5. Hacer un commit seguido de un push para subir las actualizaciones de nombre+mio en el repositorio web
+		git add -A && git commit -m "Your Message"
 		git push origin master
 
 
