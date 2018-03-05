@@ -1,0 +1,73 @@
+
+function segmentation = mySegmentByClustering( rgbImage, featureSpace, clusteringMethod, numberOfClusters)
+% This function implements a segmentation method using matlab functions
+% input
+%		rgbImage: Figure of size MxNxC in jpg
+% parameters
+%    featureSpace : 'rgb', 'lab', 'hsv', 'rgb+xy', 'lab+xy' or 'hsv+xy'
+%    clusteringMethod = 'kmeans', 'gmm', 'hierarchical' or 'watershed'.
+%    numberOfClusters positvie integer (larger than 2)
+% output
+% Matrix of size MxN, where each pixel has a cluster label
+
+%Steps
+%step 1. verificar el dominio de los argumentos de entrada
+
+%step 2. representar imagen segun el valor de featureSpace
+
+nrows = size(rgbImage,1);
+ncols = size(rgbImage,2);
+switch featureSpace
+           
+    case 'lab'    
+        cform = makecform('srgb2lab');%requires Statistics and Machine Learning Toolbox
+        featureImage = applycform(rgbImage,cform);
+		featClass = double(featureImage(:,:,2:3));
+        featClass = reshape(featClass,nrows*ncols,2);
+    case 'hsv'    
+        featureImage = rgb2hsv(rgbImage);
+		featClass = double(reshape(featureImage,nrows*ncols,2));
+    case 'rgb+xy' 
+        featureImage = rgb2rgbxy(rgbImage);
+		featClass = double(featureImage);
+		featClass = reshape(featClass,nrows*ncols*2,2);
+    case 'lab+xy'
+        cform = makecform('srgb2lab');%requires Statistics and Machine Learning Toolbox
+        featureImage = applycform(rgbImage,cform);
+        featureImage = rgb2rgbxy(featureImage);
+		featClass = double(featureImage(:,:,2:5));
+        featClass = reshape(featClass,nrows*ncols*2,2);
+    case 'hsv+xy'    
+        featureImage = rgb2hsv(rgbImage);
+        featureImage = rgb2rgbxy(featureImage);
+    otherwise
+        featureImage=rgbImage;
+		
+end
+
+%step 3. clasificar segun valores de clusteringMethod y numberOfClusters
+switch clusteringMethod 
+    case 'kmeans' %
+        
+        % repeat the clustering 3 times to avoid local minima
+        [cluster_idx, cluster_center] = kmeans(featClass,numberOfClusters,'distance','sqEuclidean', ...
+                                      'Replicates',3);
+        
+    case 'gmm'
+    
+    case {'hierarchical', 'watershed'}
+end
+%step 4. entregar valor
+
+if(strcmp(featureSpace ,'lab')  )% or featureSpace=='rgb' or featureSpace=='hsv')
+	segmentation = reshape(cluster_idx,nrows,ncols);
+else
+	segmentation = reshape(cluster_idx,nrows,ncols,2);
+	segmentation = uint16(segmentation(:,:,1));
+end
+
+end
+
+%site to complete the lab
+%https://la.mathworks.com/help/images/examples/color-based-segmentation-using-k-means-clustering.html
+
