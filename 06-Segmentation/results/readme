@@ -1,0 +1,5 @@
+file created with the command
+scp -r vision@157.253.63.7:~/GuillermoCamacho/myLab5 ./
+
+to copy modules from my machine to the server
+scp ./compareSegmentation.m vision@157.253.63.7:GuillermoCamacho/myLab5

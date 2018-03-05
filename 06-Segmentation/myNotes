@@ -1,0 +1,141 @@
+Como crear un archivo en la maq virtual, dejarlo correr, desconectarse y luego recuperar los datos. 
+screen -S segmentation
+go out!
+screen  -r segmentation
+Problema>Esto anula los graficadores, los comandos graficos van a generar errores. Se debe revisar si las imágenes pueden grabarse
+Si olvidaste el nombre puedes recuperar una lista de nombres con
+screen -list
+-------------------------------------------------------------------------
+
+Como iniciar la maquina con funciones de interfaz grafica
+ssh -X vision@157.253.63.7
+------------------------------------------------------------
+Como copiar archivos desde servidores
+
+scp -r vision@157.253.63.7:~/GuillermoCamacho/myLab5
+---------------------------------------------------------------test
+clc
+close all
+clear all
+
+%parameters setting
+	imagePath='BSDS_tiny/55075';
+	featureSpace='rgb'; %'rgb', 'lab', 'hsv', 'rgb+xy', 'lab+xy' or 'hsv+xy'
+	clusteringMethod = 'kmeans'; %'kmeans', 'gmm', 'hierarchical' or 'watershed'
+	numberOfClusters = 4;
+%load of images an segmentation computing
+	rgbImage=imread([imagePath '.jpg']);%lectura de la imagen
+	gt=load([imagePath '.mat']);
+	% Load segmentation from third human
+	segm=gt.groundTruth{3}.Segmentation;
+	%automatic segmentation
+	segmentation = mySegmentByClustering( rgbImage, featureSpace, clusteringMethod, numberOfClusters);
+
+%plotting of results in the sequence original, human segmented, automatic segmented
+figure,
+subplot(131),...
+	imshow(rgbImage)
+	title (['original image:' imagePath])
+subplot(132),...
+	image(segm) %Or imagesc?
+	colormap colorcube
+	title ('segmentation from third human')
+subplot(133),...
+	image(segmentation) 
+	colormap colorcube
+	title(['image segmented by ' featureSpace ', ' clusteringMethod ', Clusters:' numberOfClusters ]);
+
+
+--------------------------------------------------------------------mySegmentByClustering.m
+
+
+function segmentation = mySegmentByClustering( rgbImage, featureSpace, clusteringMethod, numberOfClusters)
+% This function implements a segmentation method using matlab functions
+% input
+%		rgbImage: Figure of size MxNxC in jpg
+% parameters
+%    featureSpace : 'rgb', 'lab', 'hsv', 'rgb+xy', 'lab+xy' or 'hsv+xy'
+%    clusteringMethod = 'kmeans', 'gmm', 'hierarchical' or 'watershed'.
+%    numberOfClusters positvie integer (larger than 2)
+% output
+% Matrix of size MxN, where each pixel has a cluster label
+
+%Steps
+%step 1. verificar el dominio de los argumentos de entrada
+
+%step 2. representar imagen segun el valor de featureSpace
+switch featureSpace y ajustar dimensiones para clasificacion
+           
+    case 'lab'    
+        cform = makecform('srgb2lab');%requires Statistics and Machine Learning Toolbox
+        featureImage = applycform(rgbImage,cform);
+		featureClassifier = double(featureImage(:,:,2:3));%eliminar plano l
+        nrows = size(featureClassifier,1);
+        ncols = size(featureClassifier,2);
+        featureClassifier = reshape(featureClassifier,nrows*ncols,2);
+    case 'hsv'    
+        featureImage = rgb2hsv(rgbImage);
+    case 'rgb+xy' 
+        featureImage = rgb2rgbxy(rgbImage);
+
+    case 'lab+xy'
+        cform = makecform('srgb2lab');%requires Statistics and Machine Learning Toolbox
+        featureImage = applycform(rgbImage,cform);
+        featureImage = rgb2rgbxy(featureImage);
+    case 'hsv+xy'    
+        featureImage = rgb2hsv(rgbImage);
+        featureImage = rgb2rgbxy(featureImage);
+    otherwise
+        featureImage=rgbImage;
+end
+
+%step 3. clasificar segun valores de clusteringMethod y numberOfClusters
+switch clusteringMethod 
+    case 'kmeans' %assuming lab features
+        
+        % repeat the clustering 3 times to avoid local minima
+        [cluster_idx, cluster_center] = kmeans(featureClassifier,numberOfClusters,'distance','sqEuclidean', ...
+                                      'Replicates',3);
+        
+    case 'gmm'
+    
+    case {'hierarchical', 'watershed'}
+end
+%step 4. entregar valor
+
+segmentation = reshape(cluster_idx,nrows,ncols);
+
+end
+
+
+
+%site to complete the lab
+%kmeans, lab
+%https://la.mathworks.com/help/images/examples/color-based-segmentation-using-k-means-clustering.html
+
+%GMM, rgb
+%https://la.mathworks.com/matlabcentral/fileexchange/10956-em-image-segmentation
+%https://la.mathworks.com/matlabcentral/answers/235519-image-clustering-by-gaussian-mixture-models
+
+%Watershed
+%https://la.mathworks.com/help/images/examples/marker-controlled-watershed-segmentation.html
+%https://la.mathworks.com/company/newsletters/articles/the-watershed-transform-strategies-for-image-segmentation.html
+
+
+--------------------------------------
+
+function [ rgbxy ] = rgb2rgbxy( rgb )
+%RGB2RGBXY This function converts a MxNx3 image in a MxNx5 image
+%   The two additional planes& (4,5) represent the x-position and y-position respectively
+
+	rows=size(rgb,1);
+	columns=size(rgb,2);
+	x=1:1:columns;
+	y=rows:-1:1;
+
+	x=(x'*ones(1,columns))';
+	y=y'*ones(1,rows);
+	rgbxy = rgb; 
+	rgbxy(:,:,4) = x;
+	rgbxy(:,:,5) = y;
+end
